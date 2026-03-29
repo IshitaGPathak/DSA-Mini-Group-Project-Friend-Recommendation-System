@@ -11,26 +11,47 @@ public class RecommendationEngine {
     private BFS bfs;
 
     public RecommendationEngine(Graph graph, BFS bfs) {
-        // TODO
+        this.graph = graph;
+        this.bfs = bfs;
     }
 
     // Count mutual friends between source user and a candidate user
-    // Time Complexity: O(D) where D = average degree of a node
+    // Traverse source's friend list and check if each friend
+    // exists in candidate's friend list
+    // Time Complexity: O(D^2) where D = average degree of a node
     public int countMutualFriends(int sourceId, int candidateId) {
-        // TODO
-        return 0;
+        int mutualCount = 0;
+
+        // Get friend list of source user
+        Graph.Node sourceFriend = graph.getFriends(sourceId);
+
+        // Traverse each friend of source
+        while (sourceFriend != null) {
+
+            // Check if this friend exists in candidate's friend list
+            Graph.Node candidateFriend = graph.getFriends(candidateId);
+
+            while (candidateFriend != null) {
+                if (sourceFriend.userId == candidateFriend.userId) {
+                    mutualCount++;
+                    break;
+                }
+                candidateFriend = candidateFriend.next;
+            }
+
+            sourceFriend = sourceFriend.next;
+        }
+
+        return mutualCount;
     }
 
-    // Sort candidates by mutual friend count using insertion sort
-    // Insertion sort chosen for simplicity and stability
+    // Sort candidates by mutual friend count (insertion sort)
     // Time Complexity: O(R^2) where R = number of candidates
     private void sortByMutualCount(int[] candidates, int[] mutualCounts) {
         // TODO
     }
 
     // Return top N friend recommendations for a given user
-    // Uses BFS output as candidate pool
-    // Ranks by mutual friend count in descending order
     public int[] getRecommendations(int sourceId, int topN) {
         // TODO
         return null;
