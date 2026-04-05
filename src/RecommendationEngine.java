@@ -45,11 +45,29 @@ public class RecommendationEngine {
         return mutualCount;
     }
 
-    // Sort candidates by mutual friend count (insertion sort)
-    // Time Complexity: O(R^2) where R = number of candidates
-    private void sortByMutualCount(int[] candidates, int[] mutualCounts) {
-        // TODO
+    // Sort candidates by mutual friend count using insertion sort
+// Insertion sort chosen for simplicity on small datasets
+// Sorts in descending order — highest mutual count first
+// Time Complexity: O(R^2) where R = number of candidates
+private void sortByMutualCount(int[] candidates, int[] mutualCounts) {
+    int n = candidates.length;
+
+    for (int i = 1; i < n; i++) {
+        int keyCount = mutualCounts[i];
+        int keyCandidate = candidates[i];
+        int j = i - 1;
+
+        // Shift elements with smaller mutual count to the right
+        while (j >= 0 && mutualCounts[j] < keyCount) {
+            mutualCounts[j + 1] = mutualCounts[j];
+            candidates[j + 1] = candidates[j];
+            j--;
+        }
+
+        mutualCounts[j + 1] = keyCount;
+        candidates[j + 1] = keyCandidate;
     }
+}
 
     // Return top N friend recommendations for a given user
     public int[] getRecommendations(int sourceId, int topN) {
