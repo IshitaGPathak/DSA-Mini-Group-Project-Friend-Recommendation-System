@@ -7,13 +7,17 @@ import java.util.Scanner;
 public class Main {
 
     static Scanner scanner = new Scanner(System.in);
-
-    // Temporary storage (UI-level simulation)
-    static int[] users = new int[100];
-    static String[] names = new String[100];
-    static int userCount = 0;
+    static Graph graph;
+    static BFS bfs;
+    static RecommendationEngine engine;
 
     public static void main(String[] args) {
+
+        // DO NOT initialize until other modules are ready
+        graph = null;
+        bfs = null;
+        engine = null;
+
         displayMenu();
     }
 
@@ -23,7 +27,7 @@ public class Main {
         int choice = 0;
 
         do {
-            System.out.println("\n===== FRIEND RECOMMENDATION SYSTEM =====");
+            System.out.println("\n--- Friend Recommendation System ---");
             System.out.println("1. Add User");
             System.out.println("2. Add Friendship");
             System.out.println("3. Show Friends");
@@ -74,14 +78,10 @@ public class Main {
         System.out.print("Enter user name: ");
         String name = scanner.nextLine();
 
-        users[userCount] = id;
-        names[userCount] = name;
-        userCount++;
-
-        System.out.println("User added successfully!");
+        System.out.println("Feature not available yet (Graph module pending).");
     }
 
-    // Add friendship between two users (simulation)
+    // Add friendship between two users
     static void addFriendship() {
 
         System.out.print("Enter first user ID: ");
@@ -90,16 +90,16 @@ public class Main {
         System.out.print("Enter second user ID: ");
         int u2 = scanner.nextInt();
 
-        System.out.println("Friendship added (simulated).");
+        System.out.println("Feature not available yet.");
     }
 
-    // Display all friends of a user (simulation)
+    // Display all friends of a user
     static void showFriends() {
 
         System.out.print("Enter user ID: ");
         int id = scanner.nextInt();
 
-        System.out.println("Friends feature under development.");
+        System.out.println("Feature not available yet.");
     }
 
     // Display friend recommendations for a user
@@ -108,19 +108,9 @@ public class Main {
         System.out.print("Enter user ID: ");
         int id = scanner.nextInt();
 
-        System.out.println("Recommended Friends:");
+        System.out.print("Enter number of recommendations: ");
+        int n = scanner.nextInt();
 
-        boolean found = false;
-
-        for (int i = 0; i < userCount; i++) {
-            if (users[i] != id) {
-                System.out.println(names[i]);
-                found = true;
-            }
-        }
-
-        if (!found) {
-            System.out.println("No recommendations available.");
-        }
+        System.out.println("Feature not available yet (BFS/Engine pending).");
     }
 }
