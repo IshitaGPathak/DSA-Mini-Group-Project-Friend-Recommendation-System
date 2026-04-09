@@ -21,29 +21,60 @@ public class Queue {
     int size;
 
     public Queue() {
-        // TODO
+        front = null;
+        rear = null;
+        size = 0;
+        
     }
 
     // Add element to rear of queue
     public void enqueue(int data) {
-        // TODO
+        Node newNode = new Node(data);
+
+if (rear == null) {
+    front = newNode;
+    rear = newNode;
+} else {
+    rear.next = newNode;
+    rear = newNode;
+}
+
+size++;
+        
     }
 
     // Remove and return element from front of queue
     public int dequeue() {
-        // TODO
-        return -1;
+        if (isEmpty()) {
+    System.out.println("Queue is empty");
+    return -1;
+}
+
+int value = front.data;
+front = front.next;
+
+if (front == null) {
+    rear = null;
+}
+
+size--;
+return value;
+             
     }
 
     // Check if queue is empty
     public boolean isEmpty() {
-        // TODO
-        return true;
+        return front == null; 
     }
 
     // Return front element without removing
     public int peek() {
-        // TODO
-        return -1;
+        if (isEmpty()) {
+    System.out.println("Queue is empty");
+    return -1;
+}
+
+return front.data;
+        
     }
 }
