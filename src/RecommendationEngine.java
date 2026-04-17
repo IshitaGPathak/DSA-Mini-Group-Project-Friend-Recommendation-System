@@ -70,8 +70,60 @@ private void sortByMutualCount(int[] candidates, int[] mutualCounts) {
 }
 
     // Return top N friend recommendations for a given user
-    public int[] getRecommendations(int sourceId, int topN) {
-        // TODO
-        return null;
+    // Return top N friend recommendations for a given user
+// Uses friends of friends as candidate pool
+// Ranks by mutual friend count in descending order
+// Time Complexity: O(V + E + R^2) where R = candidates
+public int[] getRecommendations(int sourceId, int topN) {
+
+    boolean[] isFriend = new boolean[graph.totalUsers];
+    boolean[] visited = new boolean[graph.totalUsers];
+
+    // Mark direct friends of source
+    Graph.Node f = graph.getFriends(sourceId);
+    while (f != null) {
+        isFriend[f.userId] = true;
+        f = f.next;
     }
+
+    // Find friends of friends as candidates
+    int[] candidates = new int[graph.totalUsers];
+    int[] mutualCounts = new int[graph.totalUsers];
+    int count = 0;
+
+    Graph.Node friend = graph.getFriends(sourceId);
+    while (friend != null) {
+        Graph.Node fof = graph.getFriends(friend.userId);
+        while (fof != null) {
+            if (fof.userId != sourceId && !isFriend[fof.userId]
+                && !visited[fof.userId]) {
+                candidates[count] = fof.userId;
+                mutualCounts[count] = countMutualFriends(sourceId, fof.userId);
+                visited[fof.userId] = true;
+                count++;
+            }
+            fof = fof.next;
+        }
+        friend = friend.next;
+    }
+
+    // Trim arrays to actual count
+    int[] trimmedCandidates = new int[count];
+    int[] trimmedCounts = new int[count];
+    for (int i = 0; i < count; i++) {
+        trimmedCandidates[i] = candidates[i];
+        trimmedCounts[i] = mutualCounts[i];
+    }
+
+    // Sort by mutual count
+    sortByMutualCount(trimmedCandidates, trimmedCounts);
+
+    // Return top N
+    int resultSize = Math.min(topN, count);
+    int[] result = new int[resultSize];
+    for (int i = 0; i < resultSize; i++) {
+        result[i] = trimmedCandidates[i];
+    }
+    return result;
+}
 }
