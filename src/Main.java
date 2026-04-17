@@ -103,14 +103,21 @@ public class Main {
     }
 
     // Display friend recommendations for a user
-    static void showRecommendations() {
-
+     static void showRecommendations() {
         System.out.print("Enter user ID: ");
-        int id = scanner.nextInt();
-
-        System.out.print("Enter number of recommendations: ");
-        int n = scanner.nextInt();
-
-        System.out.println("Feature not available yet (BFS/Engine pending).");
+        int id = Integer.parseInt(scanner.nextLine().trim());
+        System.out.print("How many recommendations? ");
+        int n = Integer.parseInt(scanner.nextLine().trim());
+        int[] recs = engine.getRecommendations(id, n);
+        if (recs.length == 0) {
+            System.out.println("No recommendations found.");
+            return;
+        }
+        System.out.println("Top " + n + " recommendations for User " + id + ":");
+        for (int i = 0; i < recs.length; i++) {
+            System.out.println("  " + (i+1) + ". User " + recs[i]
+                + " - Mutual friends: "
+                + engine.countMutualFriends(id, recs[i]));
+        }
     }
 }
