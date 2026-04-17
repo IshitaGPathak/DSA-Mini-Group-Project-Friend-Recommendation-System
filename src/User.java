@@ -8,16 +8,20 @@ public class User {
     String name;
 
     public User(int userId, String name) {
-        // TODO
+        this.userId = userId;
+        this.name = name;
     }
 
     public int getUserId() {
-        // TODO
-        return 0;
+        return userId;
     }
 
     public String getName() {
-        // TODO
-        return null;
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (" + userId + ")";
     }
 }
