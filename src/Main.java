@@ -10,100 +10,75 @@ public class Main {
     static Graph graph;
     static BFS bfs;
     static RecommendationEngine engine;
+    static int userCount = 0;
+    static final int MAX_USERS = 50;
 
     public static void main(String[] args) {
+        graph = new Graph(MAX_USERS);
+        bfs = new BFS(graph);
+        engine = new RecommendationEngine(graph, bfs);
 
-        // DO NOT initialize until other modules are ready
-        graph = null;
-        bfs = null;
-        engine = null;
+        System.out.println("=== Friend Recommendation System ===");
+        System.out.println("Using BFS and Mutual Friend Count");
+        System.out.println("=====================================\n");
 
-        displayMenu();
-    }
-
-    // Display main menu and handle user input
-    static void displayMenu() {
-
-        int choice = 0;
-
-        do {
-            System.out.println("\n--- Friend Recommendation System ---");
-            System.out.println("1. Add User");
-            System.out.println("2. Add Friendship");
-            System.out.println("3. Show Friends");
-            System.out.println("4. Show Recommendations");
-            System.out.println("5. Exit");
-
-            System.out.print("Enter your choice: ");
-
-            if (!scanner.hasNextInt()) {
-                System.out.println("Invalid input! Enter a number.");
-                scanner.next();
-                continue;
-            }
-
-            choice = scanner.nextInt();
-            scanner.nextLine(); // clear buffer
+        boolean running = true;
+        while (running) {
+            displayMenu();
+            int choice = Integer.parseInt(scanner.nextLine().trim());
 
             switch (choice) {
-                case 1:
-                    addUser();
-                    break;
-                case 2:
-                    addFriendship();
-                    break;
-                case 3:
-                    showFriends();
-                    break;
-                case 4:
-                    showRecommendations();
-                    break;
-                case 5:
-                    System.out.println("Exiting...");
+                case 1: addUser(); break;
+                case 2: addFriendship(); break;
+                case 3: showFriends(); break;
+                case 4: showRecommendations(); break;
+                case 5: showBFSTraversal(); break;
+                case 6:
+                    System.out.println("Exiting. Goodbye!");
+                    running = false;
                     break;
                 default:
-                    System.out.println("Invalid choice!");
+                    System.out.println("Invalid choice. Try again.");
             }
-
-        } while (choice != 5);
+        }
+        scanner.close();
     }
 
-    // Add a new user to the network
+    static void displayMenu() {
+        System.out.println("\n--- MENU ---");
+        System.out.println("1. Add User");
+        System.out.println("2. Add Friendship");
+        System.out.println("3. Show Friends of a User");
+        System.out.println("4. Get Friend Recommendations");
+        System.out.println("5. BFS Traversal");
+        System.out.println("6. Exit");
+        System.out.print("Enter choice: ");
+    }
+
     static void addUser() {
-
-        System.out.print("Enter user ID: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-
         System.out.print("Enter user name: ");
-        String name = scanner.nextLine();
-
-        System.out.println("Feature not available yet (Graph module pending).");
+        String name = scanner.nextLine().trim();
+        graph.addUser(userCount, name);
+        System.out.println("User added: " + name + " (ID: " + userCount + ")");
+        userCount++;
     }
 
-    // Add friendship between two users
     static void addFriendship() {
-
         System.out.print("Enter first user ID: ");
-        int u1 = scanner.nextInt();
-
+        int id1 = Integer.parseInt(scanner.nextLine().trim());
         System.out.print("Enter second user ID: ");
-        int u2 = scanner.nextInt();
-
-        System.out.println("Feature not available yet.");
+        int id2 = Integer.parseInt(scanner.nextLine().trim());
+        graph.addFriendship(id1, id2);
+        System.out.println("Friendship added between User " + id1 + " and User " + id2);
     }
 
-    // Display all friends of a user
     static void showFriends() {
-
         System.out.print("Enter user ID: ");
-        int id = scanner.nextInt();
-
-        System.out.println("Feature not available yet.");
+        int id = Integer.parseInt(scanner.nextLine().trim());
+        graph.displayFriends(id);
     }
 
-    // Display friend recommendations for a user
-     static void showRecommendations() {
+    static void showRecommendations() {
         System.out.print("Enter user ID: ");
         int id = Integer.parseInt(scanner.nextLine().trim());
         System.out.print("How many recommendations? ");
@@ -119,5 +94,16 @@ public class Main {
                 + " - Mutual friends: "
                 + engine.countMutualFriends(id, recs[i]));
         }
+    }
+
+    static void showBFSTraversal() {
+        System.out.print("Enter source user ID: ");
+        int id = Integer.parseInt(scanner.nextLine().trim());
+        int[] visited = bfs.bfsTraversal(id);
+        System.out.print("BFS order from User " + id + ": ");
+        for (int i = 0; i < visited.length; i++) {
+            System.out.print(visited[i] + " ");
+        }
+        System.out.println();
     }
 }
